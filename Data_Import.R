@@ -9,8 +9,10 @@ path
 # listing the files in "extdata"
 list.files(path)
 
-# copying the a raw data file "murders.cvs" into the working directory. In this case # I created a raw data folder in the project and set the working directory to that
-# folder. I did all that inside RStudio
+# copying the a raw data file "murders.cvs" into the working directory. 
+# In this case I created a raw data folder in the project and set the working 
+# directory to that folder.
+# I did all that inside RStudio
 
 # creating some variables to use in the function calls
 filename <- "murders.csv"
@@ -34,4 +36,4 @@ file.exists(filename)
 # R-base functions such as "read.cvs" return a data frame.
 # tidyverse functions such as "read_cvs" return a tibble.
 # Basically a data frame w/o converting character stings to factors,
-# Generally pefer tidyverse read functions
+# Generally prefer tidyverse read functions
