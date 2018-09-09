@@ -38,3 +38,12 @@ file.exists(filename)
 # Basically a data frame w/o converting character stings to factors,
 # Generally prefer tidyverse read functions
 
+# Here's an example of downloading from a URL
+# Note that the URL has to be enclosed in quotes
+
+url <- "https://github.com/rafalab/dslabs/blob/master/inst/extdata/olive.csv"
+url 
+# download the file using the function download.file()
+# remember to set the working directory to where you want the file to go
+
+download.file(url, "olive.csv")
