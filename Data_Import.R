@@ -41,9 +41,33 @@ file.exists(filename)
 # Here's an example of downloading from a URL
 # Note that the URL has to be enclosed in quotes
 
-url <- "https://github.com/rafalab/dslabs/blob/master/inst/extdata/olive.csv"
+url <- "https://raw.githubusercontent.com/rafalab/dslabs/master/inst/extdata/olive.csv"
 url 
 # download the file using the function download.file()
+# this downloads a copy of the file to your machine
 # remember to set the working directory to where you want the file to go
 
 download.file(url, "olive.csv")
+
+# Another way is to read the data directly into a tibble creating, using, and erasing
+# a temporary file. Here's an example
+
+# create a temporary directory and file name in the order below
+
+tempdir()
+tmp_file <- tempfile()
+tmp_file
+
+# downlaod the file using the temporary file name
+
+download.file(url, tmp_file)
+
+# create an object to hold the data and read the data
+
+olive <- read_csv(tmp_file)
+
+# then delete the temp file
+
+file.remove(tmp_file)
+
+# end of notes
