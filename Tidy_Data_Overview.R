@@ -274,3 +274,20 @@ head(tab)
 tab <- tab %>%
   setNames(c("state", "population", "total", "murders", "gun_murders", "gun_ownership", "total_rate", "murder_rate", "gun_murder_rate"))
 head(tab)
+
+# another test of web scaping
+
+url2 <- "https://en.wikipedia.org/wiki/List_of_countries_by_firearm-related_death_rate"
+h2 <- read_html(url2)
+tab2 <- h2 %>% 
+  html_nodes("table")
+# inspect tab2 to pick the right data table node
+tab2
+# it's node [5] 
+tab2 <- tab2[[5]]
+tab2
+# convert the HTML table to a data frame (I made it a tibble) using the rvest function html_table
+tab2 <- as.tibble(tab2 %>%
+                   html_table)
+# check the results. Got the data - needs wrangling!
+head(tab2)
