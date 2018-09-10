@@ -237,3 +237,40 @@ setequal(1:5,5:1)
 tab1
 tab2
 setequal(tab1,tab2)
+
+# web scaping example and practice
+# load the library rvest
+library(rvest)
+
+# copy/pasted the url from the eb site
+
+url <- "https://en.wikipedia.org/wiki/Gun_violence_in_the_United_States_by_state"
+
+# read the url using read_html and assign to an object 
+#and check the object's class
+
+h <- read_html(url)
+class(h)
+
+# extract the "table" nodes using html_nodes() and assign to an object tab
+tab <- h %>% 
+  html_nodes("table")
+
+# inspect the nodes in tab, based on the inspection we want the 2nd table node 
+tab
+
+# assign just the 2nd table node to tab and inspect again
+
+tab <- tab[[2]]
+tab
+# convert the HTML table to a data frame (I made it a tibble) using the rvest function html_table
+tab <- as.tibble(tab %>%
+  html_table)
+
+# check the tibble, needs soma data wrangling!
+head(tab)
+
+# change the column names to make them shorter
+tab <- tab %>%
+  setNames(c("state", "population", "total", "murders", "gun_murders", "gun_ownership", "total_rate", "murder_rate", "gun_murder_rate"))
+head(tab)
