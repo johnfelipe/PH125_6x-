@@ -72,7 +72,9 @@ file.copy(fullpath, getwd())
 
 # reading the file to a new tibble
 
-wide_data_2 <- read_csv("life-expectancy-and-fertility-two-countries-example.csv") 
+wide_data_2 <- read_csv("life-expectancy-and-fertility-two-countries-example.csv")
+
+# using bind_cols() and
 
 # inspecting the tibble
 
@@ -153,3 +155,85 @@ semi_join(tab1,tab2)
 # anti_join subsets tab1 where there are NO matches in tab2
 
 anti_join(tab1,tab2)
+
+# using bind_cols() and bind_rows() to create tibbles
+# making some subsets to practice with
+# note that I could have used select() to choose the columns
+tab <- as.tibble(results_us_election_2016)
+head(tab)
+tab1 <- tab[,1:2]
+tab1
+tab2 <- tab[,3:4]
+tab2
+tab3 <- tab[,5]
+tab3
+
+# using bind_cols() to reassemble tab
+new_tab <- bind_cols(tab1,tab2,tab3)
+head(new_tab)
+
+# now using bind_rows to create a tibble
+# creating some subsets to practice with using the slice() function
+
+tab1 <- tab %>%
+  slice(1:2)
+tab1
+tab2 <- tab %>%
+  slice(3:6)
+tab2
+
+# using bind_rows() to reassemble tab
+new_tab <- bind_rows(tab1,tab2)
+new_tab
+
+# set operations practice on data frames - tidyverse must be loaded to use
+# on tables
+
+#intersect() on vectors example
+
+intersect(1:10, 6:16)
+
+# intersect() on 2 tables, must have the same column names, returns the rows
+# in common
+# making 2 pactice tabls w/ overlapping rows
+
+tab1 <- tab %>%
+  slice(1:4)
+tab1
+tab2 <- tab %>% 
+  slice(3:6)
+tab2
+
+# intersect() of tab1 and tab2
+intersect(tab1, tab2)
+
+# union() on vectors
+union(1:10, 6:16)
+
+# union() of tab1 and tab2. Note there are no duplicates
+# also row ordering is NOT preserved
+union(tab1,tab2)
+
+# setdiff() on vectors. Note that the order of arguements is important
+# the function is NOT symetric
+
+setdiff(1:10, 6:16)
+setdiff(6:16, 1:10)
+
+# setdiff() on tab1 and tab2 returns rows that are in tab1 BUT NOT in tab2
+setdiff(tab1,tab2)
+
+# setdiff() on tab2 and tab1 returns row that are in tab2 BUT NOT tab1
+setdiff(tab2,tab1)
+
+# setequal() checks if the sets are equal reguardless of order
+
+# setequal() on vectors, the first return FALSE, the second returns TRUE
+setequal(1:5,1:6)
+setequal(1:5,5:1)
+
+# setequal() on tab1 and tab2 returns rows that are missing from the other table
+# usefull for checking for missing rows across tables
+tab1
+tab2
+setequal(tab1,tab2)
