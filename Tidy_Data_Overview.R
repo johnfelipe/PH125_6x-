@@ -102,3 +102,54 @@ head(dat_2)
 new_tidy_data_2 <- dat_2 %>% 
                     spread(variable_name, value)
 head(new_tidy_data_2)
+
+# practicing joins with subsets/slices of two tables from the dslabs package
+#where the table do NOT have matching state columns
+library(dslabs)
+data(murders)
+data(polls_us_election_2016)
+
+tab1 <- as.tibble(slice(murders, 1:6) %>%
+  select(state, population))
+tab1
+
+tab2 <- as.tibble(slice(results_us_election_2016, c(1:3,5,7:8)) %>% 
+  select(state, electoral_votes))
+tab2
+
+# left_join. In this example tab1 is kept and matches in tab2 adds electoral_votes #or NAs where there is no matching state in tbb2
+# both table have a "state" column. I'm forcing these as tibbles
+left_join(tab1,tab2)
+
+# left_join using %>% 
+tab1 %>% 
+  left_join(tab2)
+
+# right_join example, keeps tab2 and adds population or NAs
+tab1 %>% 
+  right_join(tab2)
+
+# could have used a left_join, column order is switched
+tab2 %>%
+  left_join(tab1)
+
+# inner_join keeps the intersection of the 2 tabs. Could have used %>% 
+inner_join(tab1,tab2)
+tab1 %>% 
+  inner_join(tab2)
+
+# full_join is a union of the 2 tabs, keeps all the rows in both tabs and
+# fills in the missing values w/ NA
+full_join(tab1,tab2)
+
+tab1 %>% 
+  full_join(tab2)
+
+# semi_join subsets tab1 based on matches in tab2. 
+# The tab2 columns are NOT added
+
+semi_join(tab1,tab2)
+
+# anti_join subsets tab1 where there are NO matches in tab2
+
+anti_join(tab1,tab2)
