@@ -314,14 +314,16 @@ str_detect(tab$total, pattern)
 str_subset(tab$murders, "[a]")
 
 # example using \\d to seach for a digit and the or "|" operator
+# Do NOT include spaces before after the "|" unless you intend to check
+# for a space in the pattern. Better to use "\\s" to check for spaces
 # a test vector for the example
 
-s <- c("70", "5 ft", "4' 11\"","", ".", "Six feet")
+s <- c("70", "5 ft", "4' 11\""," ", "5'10\"",".", "Six feet")
 
 # a pattern searching for a digit or "feet.
 # note the output goes to the Viewer not the Console
 # NOTE 2 - need to load the "htmlwidgets" package
-pattern <- "\\d | feet"
+pattern <- "\\d|feet"
 str_view_all(s, pattern)
 
 # more pattern searching using character classes
@@ -330,5 +332,20 @@ str_view_all(s, pattern)
 str_detect(s,"[f]")
 str_view_all(s,"[4-6]")
 
-pattern <- "^[4]' \\d{1,2}\"$"
+# "\\s" will find a space, using "\\s*" will find 0 or more spaces. 
+# The "*" allows repeat matching 0 or more or the character that preceeds it.
+# In this case a space \\s
+
+pattern <- "^[4-5]'\\s*\\d{1,2}\"$"
 str_view_all(s, pattern)
+
+# find and replace practice
+
+schools <- c("U. Kentucky", "Univ New Hampshire", "Univ. of Massachusetts", "University Georgia", "U California", "California State University")
+schools
+
+test2 <- schools %>% 
+  str_replace("^Univ\\.?\\s|^U\\.?\\s", "University ") %>% 
+  str_replace("^University of |^University ", "University of ")
+  
+test2
