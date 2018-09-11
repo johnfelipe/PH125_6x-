@@ -291,3 +291,44 @@ tab2 <- as.tibble(tab2 %>%
                    html_table)
 # check the results. Got the data - needs wrangling!
 head(tab2)
+
+s <- '5\'10"'
+s
+cat(s)
+
+# Part 1 string processing  using parse_number() to remove extra characters and convert columns to numeric
+head(tab)
+
+tab_new <- tab %>%
+  mutate_at(c(2:9), parse_number)
+
+tab_new
+
+# Part 2 string processing, looking for patterns using regular expressions (regex)
+
+# simple example of searchin for a "," in the murders tipple "tab" total column
+pattern <- ","
+str_detect(tab$total, pattern)
+
+# another example for the pattern "[a]"
+str_subset(tab$murders, "[a]")
+
+# example using \\d to seach for a digit and the or "|" operator
+# a test vector for the example
+
+s <- c("70", "5 ft", "4' 11\"","", ".", "Six feet")
+
+# a pattern searching for a digit or "feet.
+# note the output goes to the Viewer not the Console
+# NOTE 2 - need to load the "htmlwidgets" package
+pattern <- "\\d | feet"
+str_view_all(s, pattern)
+
+# more pattern searching using character classes
+# the characters are enclosed in square brackets, e.g. [ab] or [4-6]
+
+str_detect(s,"[f]")
+str_view_all(s,"[4-6]")
+
+pattern <- "^[4]' \\d{1,2}\"$"
+str_view_all(s, pattern)
