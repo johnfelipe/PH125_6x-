@@ -326,6 +326,8 @@ s <- c("70", "5 ft", "4' 11\""," ", "5'10\"",".", "Six feet")
 pattern <- "\\d|feet"
 str_view_all(s, pattern)
 
+
+
 # more pattern searching using character classes
 # the characters are enclosed in square brackets, e.g. [ab] or [4-6]
 
@@ -349,3 +351,13 @@ test2 <- schools %>%
   str_replace("^University of |^University ", "University of ")
   
 test2
+
+# more pattern matching and replacing
+problems <- c("5.3", "5,5", "6 1", "5 .11", "5, 12")
+problems
+
+pattern_w_groups <- "^([4-7])[,\\.](\\d*)$"
+str_match(problems, pattern_w_groups)
+
+pattern_w_groups2 <- "^([4-7])[,\\.\\s](\\d*)$"
+str_match(problems, pattern_w_groups2)
