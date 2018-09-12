@@ -504,3 +504,63 @@ example <- data_frame(line = c(1, 2, 3, 4),
 example
 example %>% unnest_tokens(word, text)
 
+# look at a quick example with a tweet number 3008
+# building up the code to extract words using an example
+
+i <- 3008
+campaign_tweets$text[i]
+campaign_tweets[i,] %>% 
+  unnest_tokens(word, text) %>%
+  select(word)
+
+# define a regex that captures twitter character
+pattern <- "([^A-Za-z\\d#@']|'(?![A-Za-z\\d#@]))"
+
+# use the unnest_tokens function with the regex option and appropriately extract the hashtags and mentions
+campaign_tweets[i,] %>% 
+  unnest_tokens(word, text, token = "regex", pattern = pattern) %>%
+  select(word)
+
+# minor adjustment to remove the links to pictures
+campaign_tweets[i,] %>% 
+  mutate(text = str_replace_all(text, "https://t.co/[A-Za-z\\d]+|&amp;", ""))  %>%
+  unnest_tokens(word, text, token = "regex", pattern = pattern) %>%
+  select(word)
+
+# extract the words for all tweets
+tweet_words <- campaign_tweets %>% 
+  mutate(text = str_replace_all(text, "https://t.co/[A-Za-z\\d]+|&amp;", ""))  %>%
+  unnest_tokens(word, text, token = "regex", pattern = pattern) 
+
+# what are the most commonly used words?
+tweet_words %>% 
+  count(word) %>%
+  arrange(desc(n))
+
+# The top words are not informative. The tidytext package has database of these commonly used words, referred to as stop words, 
+# in text mining "stop_words"
+# Filtering to elimenate "stop_words
+
+tweet_words <- campaign_tweets %>% 
+  mutate(text = str_replace_all(text, "https://t.co/[A-Za-z\\d]+|&amp;", ""))  %>%
+  unnest_tokens(word, text, token = "regex", pattern = pattern) %>%
+  filter(!word %in% stop_words$word ) 
+
+# and look at the top 10 words
+tweet_words %>% 
+  count(word) %>%
+  top_n(10, n) %>%
+  mutate(word = reorder(word, n)) %>%
+  arrange(desc(n))
+
+# removing unwanter tokens and stuff
+# add these two lines to the code above to generate are final table
+
+tweet_words <- campaign_tweets %>% 
+  mutate(text = str_replace_all(text, "https://t.co/[A-Za-z\\d]+|&amp;", ""))  %>%
+  unnest_tokens(word, text, token = "regex", pattern = pattern) %>%
+  filter(!word %in% stop_words$word &
+           !str_detect(word, "^\\d+$")) %>%
+  mutate(word = str_replace(word, "^'", ""))
+
+head(tweet_words)
