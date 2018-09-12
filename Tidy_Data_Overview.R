@@ -392,3 +392,42 @@ converted <- s %>%
 
 str_detect(converted, pattern)
 str_match(converted,pattern)
+
+s <- c("5'10", "6'1\"", "5'8inches", "5'7.5")
+tab <- data.frame(x = s)
+
+test1 <- extract(data = tab, col = x, into = c("feet", "inches", "decimal"), 
+                 regex = "(\\d)'(\\d{1,2})(\\.\\d+)?")
+test1
+
+# String Splitting - may need "purrr" package
+library(purrr)
+
+# create a data.frame to practice on
+schedule <- data.frame(day = c("Monday", "Tuesday"),
+                      staff = c("Mandy, Chris and Laura", "Steve, Ruth and Frank"))
+schedule
+str(schedule)
+
+test3 <- str_split(schedule$staff, ",\\s|\\sand\\s")
+test3
+
+tidy <- schedule %>% 
+  mutate(staff = str_split(staff, ", | and ")) %>% 
+  unnest()
+tidy
+
+# Recoding strings
+# using gapminder data in dslabs for example
+library(dslabs)
+data("gapminder")
+
+# Recoding country nams and  ading a new column
+dat <- gapminder %>%
+        filter(region == "Middle Africa") %>% 
+        mutate(country_short = recode(country,
+                                      "Central African Republic" = "CAR",
+                                      "Congo, Dem. Rep." = "DRC",
+                                      "Equatorial Guinea" = "Eq. Guinea"))
+dat
+
