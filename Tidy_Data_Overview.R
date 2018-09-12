@@ -475,3 +475,32 @@ campaign_tweets <- trump_tweets %>%
            created_at < ymd("2016-11-08")) %>%
   filter(!is_retweet) %>%
   arrange(created_at)
+
+# exploring if two different groups were tweeting from these devices.
+# extract the hour of each tweet , in the east coast (EST)
+# then compute the proportion of tweets tweeted at each hour for each device
+
+ds_theme_set()
+campaign_tweets %>%
+  mutate(hour = hour(with_tz(created_at, "EST"))) %>%
+  count(source, hour) %>%
+  group_by(source) %>%
+  mutate(percent = n / sum(n)) %>%
+  ungroup %>%
+  ggplot(aes(hour, percent, color = source)) +
+  geom_line() +
+  geom_point() +
+  scale_y_continuous(labels = percent_format()) +
+  labs(x = "Hour of day (EST)",
+       y = "% of tweets",
+       color = "")
+
+# load "tidytext" to convert text into a tidy table
+library(tidytext)
+
+# here's a practice example
+example <- data_frame(line = c(1, 2, 3, 4),
+                      text = c("Roses are red,", "Violets are blue,", "Sugar is sweet,", "And so are you."))
+example
+example %>% unnest_tokens(word, text)
+
