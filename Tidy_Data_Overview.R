@@ -431,3 +431,47 @@ dat <- gapminder %>%
                                       "Equatorial Guinea" = "Eq. Guinea"))
 dat
 
+# Dates, Times and Text Mining wrangling
+# need "lubridate" package for easy time/date wrangling 
+# need the latest dslabs library from github for Trump Tweets example
+library(lubridate)
+library(devtools)
+install_github("rafalab/dslabs")
+
+library(dslabs)
+packageVersion("dslabs")
+data("trump_tweets")
+
+library(tidyverse)
+library(ggplot2)
+library(lubridate)
+library(tidyr)
+library(scales)
+set.seed(1)
+
+# Exploring the data set
+# This is data frame with information about the tweet:
+head(trump_tweets)
+# The variables that are included are
+names(trump_tweets)
+#The help file ?trump_tweets provides details on what each variable represents. 
+?trump_tweets
+# The tweets are represented by the textvariable:
+trump_tweets %>% select(text) %>% head
+# the source variable tells us the device that was used to compose and upload each tweet:
+trump_tweets %>% count(source) %>% arrange(desc(n))
+# use extract to remove the Twitter for part of the source and filter out retweets.
+trump_tweets %>% 
+  extract(source, "source", "Twitter for (.*)") %>%
+  count(source)
+
+# the analysis will focus on what was tweeted between the day Trump 
+# announced his campaign and election day
+# and not include retweets
+campaign_tweets <- trump_tweets %>% 
+  extract(source, "source", "Twitter for (.*)") %>%
+  filter(source %in% c("Android", "iPhone") &
+           created_at >= ymd("2015-06-17") & 
+           created_at < ymd("2016-11-08")) %>%
+  filter(!is_retweet) %>%
+  arrange(created_at)
